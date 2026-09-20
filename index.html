@@ -2,646 +2,578 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جدول الحصص المدرسي التفاعلي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>جدول الحصص المدرسي الذكي</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Tajawal -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
-        @property --angle-1 {
-            syntax: '<angle>';
-            initial-value: 0deg;
-            inherits: false;
-        }
-
-        @property --angle-2 {
-            syntax: '<angle>';
-            initial-value: -45deg;
-            inherits: false;
-        }
-
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.75);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-primary: #38bdf8;
-            --accent-secondary: #818cf8;
-            --border-color: rgba(255, 255, 255, 0.15);
-            --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --anim--hover-time: 400ms;
-            --anim--hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
             font-family: 'Tajawal', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* Vibrant Modern Mesh Background */
         body {
-            background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(129, 140, 248, 0.15) 0px, transparent 50%);
+            background: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.18) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+                linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             background-attachment: fixed;
-            color: var(--text-primary);
             min-height: 100vh;
-            padding-bottom: 120px;
-            overflow-x: hidden;
+            color: #0f172a;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 1rem;
+        /* Glassmorphism Styling */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05),
+                        0 0 15px rgba(255, 255, 255, 0.6) inset;
         }
 
-        /* Header Styling */
-        header {
-            text-align: center;
-            padding: 2rem 1rem 1rem;
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1),
+                        0 0 20px rgba(99, 102, 241, 0.15);
         }
 
-        header h1 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
+        /* Horizontal Scrollbar Styling */
+        .table-scroll-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .table-scroll-container::-webkit-scrollbar-track {
+            background: rgba(226, 232, 240, 0.6);
+            border-radius: 99px;
+        }
+        .table-scroll-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            border-radius: 99px;
         }
 
-        header p {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        /* Stage Selector Controls */
-        .controls-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.25rem;
-            margin: 1.5rem 0 2rem;
-        }
-
-        .stage-selector {
-            display: flex;
-            gap: 0.75rem;
-            background: rgba(15, 23, 42, 0.6);
-            padding: 6px;
-            border-radius: 999px;
-            border: 1px solid var(--border-color);
+        /* Sticky Day Column for Mobile */
+        .sticky-col {
+            position: sticky;
+            right: 0;
+            z-index: 25;
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.04);
         }
 
+        /* Interactive Tabs */
         .stage-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            padding: 0.65rem 1.5rem;
-            border-radius: 999px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .stage-btn.active {
-            background: linear-gradient(135deg, #0284c7, #6366f1);
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             color: #ffffff;
-            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+            box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.4);
         }
 
-        /* Table Card Base Styling */
-        .table-card {
-            background: var(--card-bg);
-            border-radius: 24px;
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(20px);
-            padding: 1.5rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            display: none;
-            animation: slideUp 0.35s ease-out forwards;
-        }
-
-        .table-card.active {
-            display: block;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .table-header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .table-title {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: var(--accent-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            border-radius: 14px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 8px;
-            text-align: center;
-            min-width: 650px;
-        }
-
-        th {
-            background: rgba(15, 23, 42, 0.8);
-            color: var(--text-secondary);
-            font-weight: 700;
-            padding: 1rem 0.5rem;
-            font-size: 0.95rem;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        td {
-            padding: 0.6rem 0.4rem;
-            vertical-align: middle;
-        }
-
-        .day-cell {
-            font-weight: 800;
-            color: #f1f5f9;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 10px;
-            width: 100px;
-        }
-
-        /* Subject Badges Styling */
-        .subject-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem 0.8rem;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 0.92rem;
+        .class-pill {
             transition: all 0.25s ease;
-            width: 95%;
-            min-height: 42px;
-            box-sizing: border-box;
-            text-align: center;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+        .class-pill.active {
+            background: #ffffff;
+            color: #4f46e5;
+            box-shadow: 0 4px 15px -2px rgba(79, 70, 229, 0.25);
+            border-color: rgba(99, 102, 241, 0.5);
         }
 
-        /* Subject Color Classes */
-        .badge-purple {
-            background-color: #f3e8ff;
-            color: #6b21a8;
-            border: 1px solid #d8b4fe;
+        .grade-nav-btn {
+            transition: all 0.25s ease;
         }
-        
-        .badge-amber {
-            background-color: #fef3c7;
-            color: #92400e;
-            border: 1px solid #fde68a;
-        }
-        
-        .badge-red {
-            background-color: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fca5a5;
-        }
-        
-        .badge-emerald {
-            background-color: #d1fae5;
-            color: #065f46;
-            border: 1px solid #6ee7b7;
-        }
-        
-        .badge-blue {
-            background-color: #dbeafe;
-            color: #1e40af;
-            border: 1px solid #93c5fd;
-        }
-        
-        .badge-gray {
-            background-color: rgba(148, 163, 184, 0.15);
-            color: #cbd5e1;
-            border: 1px dashed rgba(203, 213, 225, 0.4);
-        }
-        
-        .badge-default {
-            background-color: #f8fafc;
-            color: #334155;
-            border: 1px solid #e2e8f0;
-        }
-
-        /* Floating Menu Bar */
-        .menu {
-            position: fixed;
-            left: 50%;
-            bottom: 20px;
-            transform: translateX(-50%);
-            width: calc(100% - 30px);
-            max-width: 600px;
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            padding: 8px;
-            border-radius: 99rem;
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            z-index: 1000;
-        }
-
-        .menu a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1 1 0;
-            min-width: 0;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            padding: 8px 6px;
-            border-radius: 999rem;
-            cursor: pointer;
-            transition: all 0.25s var(--ease-spring);
-        }
-
-        .menu a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+        .grade-nav-btn.active {
+            color: #4f46e5;
             transform: translateY(-2px);
+            font-weight: 800;
+        }
+        .grade-nav-btn.active .grade-icon {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
 
-        .menu a svg, .menu a i {
-            font-size: 1.1rem;
-            margin-bottom: 2px;
+        /* Subject Dynamic Color Classes */
+        .subj-english {
+            background: rgba(243, 232, 255, 0.9) !important;
+            color: #6b21a8 !important;
+            border-color: #d8b4fe !important;
+            box-shadow: 0 2px 8px rgba(168, 85, 247, 0.15) !important;
         }
-
-        .menu a span {
-            font-size: 0.75rem;
-            font-weight: 700;
-            white-space: nowrap;
+        .subj-arabic {
+            background: rgba(254, 243, 199, 0.9) !important;
+            color: #78350f !important;
+            border-color: #fde047 !important;
+            box-shadow: 0 2px 8px rgba(234, 179, 8, 0.15) !important;
         }
-
-        .menu a.active {
-            background: rgba(56, 189, 248, 0.25);
-            color: #38bdf8;
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+        .subj-math {
+            background: rgba(254, 226, 226, 0.9) !important;
+            color: #991b1b !important;
+            border-color: #fca5a5 !important;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15) !important;
         }
-
-        .menu a:active {
-            transform: scale(0.95);
+        .subj-science {
+            background: rgba(209, 250, 229, 0.9) !important;
+            color: #065f46 !important;
+            border-color: #6ee7b7 !important;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15) !important;
         }
-
-        @media (max-width: 640px) {
-            header h1 { font-size: 1.8rem; }
-            .menu a span { font-size: 0.68rem; }
+        .subj-social {
+            background: rgba(224, 242, 254, 0.9) !important;
+            color: #075985 !important;
+            border-color: #7dd3fc !important;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.15) !important;
+        }
+        .subj-break {
+            background: rgba(241, 245, 249, 0.95) !important;
+            color: #475569 !important;
+            border-color: #cbd5e1 !important;
+            font-weight: 800 !important;
+        }
+        .subj-default {
+            background: rgba(240, 253, 250, 0.9) !important;
+            color: #115e59 !important;
+            border-color: #99f6e4 !important;
         }
     </style>
 </head>
-<body>
+<body class="pb-32 pt-4 px-3 sm:px-6 max-w-7xl mx-auto min-h-screen flex flex-col justify-between">
 
-    <div class="container">
-        <header>
-            <h1><i class="fa-solid fa-calendar-days"></i> جدول الحصص المدرسي التفاعلي</h1>
-            <p>جدول دراسي منظم مع التلوين التلقائي السريع للمواد الدراسية</p>
+    <div>
+        <!-- App Header -->
+        <header class="glass-panel rounded-3xl p-4 sm:p-5 mb-5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3.5 w-full md:w-auto">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-indigo-500/25 shrink-0">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xl sm:text-2xl font-black bg-gradient-to-l from-indigo-900 via-indigo-700 to-purple-800 bg-clip-text text-transparent">
+                            جدول الحصص المدرسي الذكي
+                        </h1>
+                        <span class="px-2.5 py-0.5 text-[10px] font-bold bg-indigo-100 text-indigo-700 rounded-full border border-indigo-200">2026</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-500 font-medium">مستقل لكل صف وفصل • تلوين تلقائي للمواد</p>
+                </div>
+            </div>
+
+            <!-- Stage Switcher Tabs -->
+            <div class="flex items-center bg-slate-200/60 p-1.5 rounded-2xl w-full md:w-auto justify-center gap-1.5 border border-white/60">
+                <button onclick="switchStage('primary')" id="btn-stage-primary" class="stage-btn active flex-1 md:flex-none px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-child-reaching text-base"></i>
+                    المرحلة الابتدائية
+                </button>
+                <button onclick="switchStage('prep')" id="btn-stage-prep" class="stage-btn flex-1 md:flex-none px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-600 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-graduate text-base"></i>
+                    المرحلة الإعدادية
+                </button>
+            </div>
         </header>
 
-        <div class="controls-wrapper">
-            <!-- Stage Toggle Button Bar -->
-            <div class="stage-selector">
-                <button class="stage-btn active" id="stage-primary-btn" onclick="switchStage('primary')">
-                    <i class="fa-solid fa-child"></i> المرحلة الابتدائية
-                </button>
-                <button class="stage-btn" id="stage-prep-btn" onclick="switchStage('prep')">
-                    <i class="fa-solid fa-user-graduate"></i> المرحلة الإعدادية
-                </button>
+        <!-- Class Switcher (Pill Selector: 1/1, 1/2, 1/3, 1/4) -->
+        <div class="glass-panel rounded-2xl p-2.5 mb-5 flex items-center justify-between gap-3 overflow-x-auto">
+            <div class="flex items-center gap-2 shrink-0">
+                <span class="text-xs font-bold text-slate-500 px-2 flex items-center gap-1">
+                    <i class="fa-solid fa-door-open text-indigo-500"></i> اختر الفصل:
+                </span>
+            </div>
+            <div id="class-pills-container" class="flex gap-2 p-0.5">
+                <!-- Dynamically rendered class pills (e.g. 1/1, 1/2, 1/3, 1/4) -->
             </div>
         </div>
 
-        <main id="schedule-container">
-            
-            <!-- ==================== PRIMARY 1 ==================== -->
-            <div class="table-card active" id="table-primary-1">
-                <div class="table-header-info">
-                    <div class="table-title"><i class="fa-solid fa-shapes"></i> جدول الصف الأول الابتدائي</div>
+        <!-- Main Content Area: Independent Static HTML Tables -->
+        <main class="glass-panel rounded-3xl p-3 sm:p-6 relative">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4 px-1">
+                <div class="flex items-center gap-2">
+                    <span id="current-badge" class="px-3.5 py-1.5 bg-indigo-500/10 text-indigo-700 text-xs sm:text-sm font-black rounded-xl border border-indigo-200/80 flex items-center gap-2">
+                        <i class="fa-solid fa-bookmark text-indigo-500"></i>
+                        <span id="current-badge-text">الصف الأول الابتدائي - فصل 1/1</span>
+                    </span>
                 </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>اليوم</th><th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>فسحة</th><th>الحصة 4</th><th>الحصة 5</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="day-cell">الأحد</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">دراسات</span></td></tr>
-                            <tr><td class="day-cell">الإثنين</td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">تربية دينية</span></td></tr>
-                            <tr><td class="day-cell">الثلاثاء</td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">أنشطة</span></td></tr>
-                            <tr><td class="day-cell">الأربعاء</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">علوم</span></td></tr>
-                            <tr><td class="day-cell">الخميس</td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">تربية فنية</span></td></tr>
-                        </tbody>
-                    </table>
+                
+                <div class="text-xs text-slate-500 font-medium flex items-center gap-2 bg-white/70 px-3 py-1.5 rounded-xl border border-white/80 shadow-xs">
+                    <i class="fa-solid fa-arrows-left-right text-indigo-500 animate-pulse"></i>
+                    <span>اسحب الجدول أفقياً لرؤية باقي الحصص</span>
                 </div>
             </div>
 
-            <!-- ==================== PRIMARY 2 ==================== -->
-            <div class="table-card" id="table-primary-2">
-                <div class="table-header-info">
-                    <div class="table-title"><i class="fa-solid fa-shapes"></i> جدول الصف الثاني الابتدائي</div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
+            <!-- Scrollable Table Container -->
+            <div class="table-scroll-container overflow-x-auto rounded-2xl border border-slate-200/80 shadow-sm">
+                
+                <!-- PRIMARY 1 (1/1 to 1/4) -->
+                <div id="table-primary-1-1" class="schedule-table-view">
+                    <table class="w-full text-right border-collapse min-w-[760px]">
                         <thead>
-                            <tr><th>اليوم</th><th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>فسحة</th><th>الحصة 4</th><th>الحصة 5</th></tr>
+                            <tr class="bg-gradient-to-l from-slate-100 to-slate-200/70 text-slate-700 text-xs sm:text-sm font-extrabold border-b border-slate-200">
+                                <th class="p-4 sticky-col text-center w-28 shadow-sm">اليوم</th>
+                                <th class="p-3 text-center">الحصة 1<br><span class="text-[10px] text-slate-400 font-normal">08:00 - 08:45</span></th>
+                                <th class="p-3 text-center">الحصة 2<br><span class="text-[10px] text-slate-400 font-normal">08:45 - 09:30</span></th>
+                                <th class="p-3 text-center">الحصة 3<br><span class="text-[10px] text-slate-400 font-normal">09:30 - 10:15</span></th>
+                                <th class="p-3 text-center bg-slate-200/60 w-24">فسحة<br><span class="text-[10px] text-slate-400 font-normal">10:15 - 10:45</span></th>
+                                <th class="p-3 text-center">الحصة 4<br><span class="text-[10px] text-slate-400 font-normal">10:45 - 11:30</span></th>
+                                <th class="p-3 text-center">الحصة 5<br><span class="text-[10px] text-slate-400 font-normal">11:30 - 12:15</span></th>
+                                <th class="p-3 text-center">الحصة 6<br><span class="text-[10px] text-slate-400 font-normal">12:15 - 01:00</span></th>
+                            </tr>
                         </thead>
-                        <tbody>
-                            <tr><td class="day-cell">الأحد</td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">أنشطة</span></td></tr>
-                            <tr><td class="day-cell">الإثنين</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">علوم</span></td></tr>
-                            <tr><td class="day-cell">الثلاثاء</td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">تربية دينية</span></td></tr>
-                            <tr><td class="day-cell">الأربعاء</td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">علوم</span></td></tr>
-                            <tr><td class="day-cell">الخميس</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">تربية فنية</span></td></tr>
+                        <tbody class="divide-y divide-slate-200/60 bg-white/40 text-xs sm:text-sm font-medium">
+                            <tr><td class="p-3 sticky-col text-center font-black">الأحد</td><td>لغة عربية</td><td>لغة عربية</td><td>إنجليزي</td><td>فسحة</td><td>رياضيات</td><td>علوم</td><td>تربية دينية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الإثنين</td><td>رياضيات</td><td>رياضيات</td><td>لغة عربية</td><td>فسحة</td><td>إنجليزي</td><td>دراسات</td><td>تربية فنية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الثلاثاء</td><td>علوم</td><td>لغة عربية</td><td>لغة عربية</td><td>فسحة</td><td>رياضيات</td><td>إنجليزي</td><td>حاسب آلي</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الأربعاء</td><td>إنجليزي</td><td>إنجليزي</td><td>دراسات</td><td>فسحة</td><td>لغة عربية</td><td>رياضيات</td><td>علوم</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الخميس</td><td>دراسات</td><td>علوم</td><td>رياضيات</td><td>فسحة</td><td>لغة عربية</td><td>إنجليزي</td><td>نشاط</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <!-- ==================== PRIMARY 3 ==================== -->
-            <div class="table-card" id="table-primary-3">
-                <div class="table-header-info">
-                    <div class="table-title"><i class="fa-solid fa-shapes"></i> جدول الصف الثالث الابتدائي</div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>اليوم</th><th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>فسحة</th><th>الحصة 4</th><th>الحصة 5</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="day-cell">الأحد</td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">علوم</span></td></tr>
-                            <tr><td class="day-cell">الإثنين</td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">تربية دينية</span></td></tr>
-                            <tr><td class="day-cell">الثلاثاء</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">أنشطة</span></td></tr>
-                            <tr><td class="day-cell">الأربعاء</td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">دراسات</span></td></tr>
-                            <tr><td class="day-cell">الخميس</td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">إنجليزي</span></td></tr>
+                <div id="table-primary-1-2" class="schedule-table-view hidden">
+                    <table class="w-full text-right border-collapse min-w-[760px]">
+                        <thead><tr class="bg-slate-100 text-xs sm:text-sm font-extrabold"><th class="p-4 sticky-col text-center w-28">اليوم</th><th class="p-3 text-center">1</th><th class="p-3 text-center">2</th><th class="p-3 text-center">3</th><th class="p-3 text-center bg-slate-200/60">فسحة</th><th class="p-3 text-center">4</th><th class="p-3 text-center">5</th><th class="p-3 text-center">6</th></tr></thead>
+                        <tbody class="divide-y divide-slate-200/60 bg-white/40 text-xs sm:text-sm">
+                            <tr><td class="p-3 sticky-col text-center font-black">الأحد</td><td>إنجليزي</td><td>لغة عربية</td><td>رياضيات</td><td>فسحة</td><td>علوم</td><td>دراسات</td><td>تربية دينية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الإثنين</td><td>لغة عربية</td><td>لغة عربية</td><td>إنجليزي</td><td>فسحة</td><td>رياضيات</td><td>حاسب آلي</td><td>نشاط</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الثلاثاء</td><td>رياضيات</td><td>رياضيات</td><td>علوم</td><td>فسحة</td><td>لغة عربية</td><td>إنجليزي</td><td>تربية فنية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الأربعاء</td><td>علوم</td><td>دراسات</td><td>لغة عربية</td><td>فسحة</td><td>إنجليزي</td><td>إنجليزي</td><td>رياضيات</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الخميس</td><td>لغة عربية</td><td>إنجليزي</td><td>دراسات</td><td>فسحة</td><td>علوم</td><td>رياضيات</td><td>نشاط</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <!-- ==================== PRIMARY 4 ==================== -->
-            <div class="table-card" id="table-primary-4">
-                <div class="table-header-info">
-                    <div class="table-title"><i class="fa-solid fa-shapes"></i> جدول الصف الرابع الابتدائي</div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>اليوم</th><th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>فسحة</th><th>الحصة 4</th><th>الحصة 5</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="day-cell">الأحد</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">دراسات</span></td></tr>
-                            <tr><td class="day-cell">الإثنين</td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">علوم</span></td></tr>
-                            <tr><td class="day-cell">الثلاثاء</td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">إنجليزي</span></td></tr>
-                            <tr><td class="day-cell">الأربعاء</td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">لغة عربية</span></td></tr>
-                            <tr><td class="day-cell">الخميس</td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">رياضيات</span></td></tr>
+                <!-- PRIMARY 2 -->
+                <div id="table-primary-2-1" class="schedule-table-view hidden">
+                    <table class="w-full text-right border-collapse min-w-[760px]">
+                        <thead><tr class="bg-slate-100 text-xs sm:text-sm font-extrabold"><th class="p-4 sticky-col text-center w-28">اليوم</th><th class="p-3 text-center">1</th><th class="p-3 text-center">2</th><th class="p-3 text-center">3</th><th class="p-3 text-center bg-slate-200/60">فسحة</th><th class="p-3 text-center">4</th><th class="p-3 text-center">5</th><th class="p-3 text-center">6</th></tr></thead>
+                        <tbody class="divide-y divide-slate-200/60 bg-white/40 text-xs sm:text-sm">
+                            <tr><td class="p-3 sticky-col text-center font-black">الأحد</td><td>رياضيات</td><td>رياضيات</td><td>لغة عربية</td><td>فسحة</td><td>إنجليزي</td><td>علوم</td><td>دين</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الإثنين</td><td>لغة عربية</td><td>إنجليزي</td><td>علوم</td><td>فسحة</td><td>دراسات</td><td>رياضيات</td><td>حاسب</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الثلاثاء</td><td>إنجليزي</td><td>إنجليزي</td><td>لغة عربية</td><td>فسحة</td><td>رياضيات</td><td>دراسات</td><td>رسم</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الأربعاء</td><td>علوم</td><td>علوم</td><td>دراسات</td><td>فسحة</td><td>لغة عربية</td><td>إنجليزي</td><td>رياضيات</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الخميس</td><td>لغة عربية</td><td>لغة عربية</td><td>إنجليزي</td><td>فسحة</td><td>علوم</td><td>رياضيات</td><td>نشاط</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <!-- ==================== PRIMARY 5 ==================== -->
-            <div class="table-card" id="table-primary-5">
-                <div class="table-header-info">
-                    <div class="table-title"><i class="fa-solid fa-shapes"></i> جدول الصف الخامس الابتدائي</div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>اليوم</th><th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>فسحة</th><th>الحصة 4</th><th>الحصة 5</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="day-cell">الأحد</td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">إنجليزي</span></td></tr>
-                            <tr><td class="day-cell">الإثنين</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">دراسات</span></td></tr>
-                            <tr><td class="day-cell">الثلاثاء</td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">علوم</span></td></tr>
-                            <tr><td class="day-cell">الأربعاء</td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">دراسات</span></td></tr>
-                            <tr><td class="day-cell">الخميس</td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">لغة عربية</span></td></tr>
+                <!-- PRIMARY 3 -->
+                <div id="table-primary-3-1" class="schedule-table-view hidden">
+                    <table class="w-full text-right border-collapse min-w-[760px]">
+                        <thead><tr class="bg-slate-100 text-xs sm:text-sm font-extrabold"><th class="p-4 sticky-col text-center w-28">اليوم</th><th class="p-3 text-center">1</th><th class="p-3 text-center">2</th><th class="p-3 text-center">3</th><th class="p-3 text-center bg-slate-200/60">فسحة</th><th class="p-3 text-center">4</th><th class="p-3 text-center">5</th><th class="p-3 text-center">6</th></tr></thead>
+                        <tbody class="divide-y divide-slate-200/60 bg-white/40 text-xs sm:text-sm">
+                            <tr><td class="p-3 sticky-col text-center font-black">الأحد</td><td>علوم</td><td>علوم</td><td>إنجليزي</td><td>فسحة</td><td>لغة عربية</td><td>رياضيات</td><td>دراسات</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الإثنين</td><td>إنجليزي</td><td>لغة عربية</td><td>لغة عربية</td><td>فسحة</td><td>رياضيات</td><td>رياضيات</td><td>دينية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الثلاثاء</td><td>دراسات</td><td>دراسات</td><td>علوم</td><td>فسحة</td><td>إنجليزي</td><td>لغة عربية</td><td>حاسب</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الأربعاء</td><td>لغة عربية</td><td>إنجليزي</td><td>رياضيات</td><td>فسحة</td><td>علوم</td><td>دراسات</td><td>فنية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الخميس</td><td>رياضيات</td><td>رياضيات</td><td>لغة عربية</td><td>فسحة</td><td>إنجليزي</td><td>علوم</td><td>نشاط</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <!-- ==================== PRIMARY 6 ==================== -->
-            <div class="table-card" id="table-primary-6">
-                <div class="table-header-info">
-                    <div class="table-title"><i class="fa-solid fa-shapes"></i> جدول الصف السادس الابتدائي</div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>اليوم</th><th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>فسحة</th><th>الحصة 4</th><th>الحصة 5</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="day-cell">الأحد</td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">دراسات</span></td></tr>
-                            <tr><td class="day-cell">الإثنين</td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">لغة عربية</span></td></tr>
-                            <tr><td class="day-cell">الثلاثاء</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">علوم</span></td></tr>
-                            <tr><td class="day-cell">الأربعاء</td><td><span class="subject-badge">رياضيات</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td></tr>
-                            <tr><td class="day-cell">الخميس</td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">رياضيات</span></td></tr>
+                <!-- PRIMARY 4 -->
+                <div id="table-primary-4-1" class="schedule-table-view hidden">
+                    <table class="w-full text-right border-collapse min-w-[760px]">
+                        <thead><tr class="bg-slate-100 text-xs sm:text-sm font-extrabold"><th class="p-4 sticky-col text-center w-28">اليوم</th><th class="p-3 text-center">1</th><th class="p-3 text-center">2</th><th class="p-3 text-center">3</th><th class="p-3 text-center bg-slate-200/60">فسحة</th><th class="p-3 text-center">4</th><th class="p-3 text-center">5</th><th class="p-3 text-center">6</th></tr></thead>
+                        <tbody class="divide-y divide-slate-200/60 bg-white/40 text-xs sm:text-sm">
+                            <tr><td class="p-3 sticky-col text-center font-black">الأحد</td><td>دراسات اجتماعية</td><td>لغة عربية</td><td>لغة عربية</td><td>فسحة</td><td>ساينس</td><td>حساب</td><td>إنجليزي</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الإثنين</td><td>حساب</td><td>حساب</td><td>إنجليزي</td><td>فسحة</td><td>دراسات اجتماعية</td><td>لغة عربية</td><td>دين</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الثلاثاء</td><td>لغة إنجليزية</td><td>لغة إنجليزية</td><td>ساينس</td><td>فسحة</td><td>لغة عربية</td><td>حساب</td><td>حاسب آلي</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الأربعاء</td><td>ساينس</td><td>ساينس</td><td>دراسات اجتماعية</td><td>فسحة</td><td>لغة عربية</td><td>لغة إنجليزية</td><td>رسم</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الخميس</td><td>لغة عربية</td><td>دراسات اجتماعية</td><td>حساب</td><td>فسحة</td><td>لغة إنجليزية</td><td>ساينس</td><td>نشاط</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <!-- ==================== PREP 1 ==================== -->
-            <div class="table-card" id="table-prep-1">
-                <div class="table-header-info">
-                    <div class="table-title"><i class="fa-solid fa-graduation-cap"></i> جدول الصف الأول الإعدادي</div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>اليوم</th><th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>فسحة</th><th>الحصة 4</th><th>الحصة 5</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="day-cell">الأحد</td><td><span class="subject-badge">جبر</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">دراسات</span></td></tr>
-                            <tr><td class="day-cell">الإثنين</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">هندسة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">حاسب آلي</span></td></tr>
-                            <tr><td class="day-cell">الثلاثاء</td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">جبر</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td></tr>
-                            <tr><td class="day-cell">الأربعاء</td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">هندسة</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">علوم</span></td></tr>
-                            <tr><td class="day-cell">الخميس</td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">جبر</span></td><td><span class="subject-badge">تربية فنية</span></td></tr>
+                <!-- PRIMARY 5 -->
+                <div id="table-primary-5-1" class="schedule-table-view hidden">
+                    <table class="w-full text-right border-collapse min-w-[760px]">
+                        <thead><tr class="bg-slate-100 text-xs sm:text-sm font-extrabold"><th class="p-4 sticky-col text-center w-28">اليوم</th><th class="p-3 text-center">1</th><th class="p-3 text-center">2</th><th class="p-3 text-center">3</th><th class="p-3 text-center bg-slate-200/60">فسحة</th><th class="p-3 text-center">4</th><th class="p-3 text-center">5</th><th class="p-3 text-center">6</th></tr></thead>
+                        <tbody class="divide-y divide-slate-200/60 bg-white/40 text-xs sm:text-sm">
+                            <tr><td class="p-3 sticky-col text-center font-black">الأحد</td><td>لغة عربية</td><td>إنجليزي</td><td>رياضيات</td><td>فسحة</td><td>علوم</td><td>دراسات</td><td>دين</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الإثنين</td><td>علوم</td><td>علوم</td><td>لغة عربية</td><td>فسحة</td><td>إنجليزي</td><td>رياضيات</td><td>حاسب</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الثلاثاء</td><td>رياضيات</td><td>رياضيات</td><td>دراسات</td><td>فسحة</td><td>لغة عربية</td><td>إنجليزي</td><td>فنية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الأربعاء</td><td>إنجليزي</td><td>إنجليزي</td><td>علوم</td><td>فسحة</td><td>دراسات</td><td>لغة عربية</td><td>رياضيات</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الخميس</td><td>دراسات</td><td>لغة عربية</td><td>إنجليزي</td><td>فسحة</td><td>رياضيات</td><td>علوم</td><td>نشاط</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <!-- ==================== PREP 2 ==================== -->
-            <div class="table-card" id="table-prep-2">
-                <div class="table-header-info">
-                    <div class="table-title"><i class="fa-solid fa-graduation-cap"></i> جدول الصف الثاني الإعدادي</div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>اليوم</th><th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>فسحة</th><th>الحصة 4</th><th>الحصة 5</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="day-cell">الأحد</td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">هندسة</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">إنجليزي</span></td></tr>
-                            <tr><td class="day-cell">الإثنين</td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">جبر</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">دراسات</span></td></tr>
-                            <tr><td class="day-cell">الثلاثاء</td><td><span class="subject-badge">جبر</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">حاسب آلي</span></td></tr>
-                            <tr><td class="day-cell">الأربعاء</td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">هندسة</span></td><td><span class="subject-badge">لغة عربية</span></td></tr>
-                            <tr><td class="day-cell">الخميس</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">هندسة</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">تربية دينية</span></td></tr>
+                <!-- PRIMARY 6 -->
+                <div id="table-primary-6-1" class="schedule-table-view hidden">
+                    <table class="w-full text-right border-collapse min-w-[760px]">
+                        <thead><tr class="bg-slate-100 text-xs sm:text-sm font-extrabold"><th class="p-4 sticky-col text-center w-28">اليوم</th><th class="p-3 text-center">1</th><th class="p-3 text-center">2</th><th class="p-3 text-center">3</th><th class="p-3 text-center bg-slate-200/60">فسحة</th><th class="p-3 text-center">4</th><th class="p-3 text-center">5</th><th class="p-3 text-center">6</th></tr></thead>
+                        <tbody class="divide-y divide-slate-200/60 bg-white/40 text-xs sm:text-sm">
+                            <tr><td class="p-3 sticky-col text-center font-black">الأحد</td><td>رياضيات</td><td>علوم</td><td>لغة عربية</td><td>فسحة</td><td>إنجليزي</td><td>دراسات</td><td>دينية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الإثنين</td><td>دراسات</td><td>دراسات</td><td>إنجليزي</td><td>فسحة</td><td>لغة عربية</td><td>رياضيات</td><td>علوم</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الثلاثاء</td><td>لغة عربية</td><td>لغة عربية</td><td>رياضيات</td><td>فسحة</td><td>علوم</td><td>إنجليزي</td><td>حاسب</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الأربعاء</td><td>إنجليزي</td><td>إنجليزي</td><td>دراسات</td><td>فسحة</td><td>رياضيات</td><td>علوم</td><td>فنية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الخميس</td><td>علوم</td><td>رياضيات</td><td>إنجليزي</td><td>فسحة</td><td>لغة عربية</td><td>دراسات</td><td>نشاط</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <!-- ==================== PREP 3 ==================== -->
-            <div class="table-card" id="table-prep-3">
-                <div class="table-header-info">
-                    <div class="table-title"><i class="fa-solid fa-graduation-cap"></i> جدول الصف الثالث الإعدادي</div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>اليوم</th><th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>فسحة</th><th>الحصة 4</th><th>الحصة 5</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="day-cell">الأحد</td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">جبر</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">دراسات</span></td></tr>
-                            <tr><td class="day-cell">الإثنين</td><td><span class="subject-badge">هندسة</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">علوم</span></td></tr>
-                            <tr><td class="day-cell">الثلاثاء</td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">جبر</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">إنجليزي</span></td></tr>
-                            <tr><td class="day-cell">الأربعاء</td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">علوم</span></td><td><span class="subject-badge">هندسة</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">حاسب آلي</span></td></tr>
-                            <tr><td class="day-cell">الخميس</td><td><span class="subject-badge">دراسات</span></td><td><span class="subject-badge">لغة عربية</span></td><td><span class="subject-badge">إنجليزي</span></td><td><span class="subject-badge">فسحة</span></td><td><span class="subject-badge">جبر</span></td><td><span class="subject-badge">علوم</span></td></tr>
+                <!-- PREP 1 -->
+                <div id="table-prep-1-1" class="schedule-table-view hidden">
+                    <table class="w-full text-right border-collapse min-w-[760px]">
+                        <thead><tr class="bg-slate-100 text-xs sm:text-sm font-extrabold"><th class="p-4 sticky-col text-center w-28">اليوم</th><th class="p-3 text-center">1</th><th class="p-3 text-center">2</th><th class="p-3 text-center">3</th><th class="p-3 text-center bg-slate-200/60">فسحة</th><th class="p-3 text-center">4</th><th class="p-3 text-center">5</th><th class="p-3 text-center">6</th></tr></thead>
+                        <tbody class="divide-y divide-slate-200/60 bg-white/40 text-xs sm:text-sm">
+                            <tr><td class="p-3 sticky-col text-center font-black">الأحد</td><td>جبر</td><td>هندسة</td><td>لغة عربية</td><td>فسحة</td><td>English</td><td>علوم</td><td>دراسات اجتماعية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الإثنين</td><td>لغة عربية</td><td>لغة عربية</td><td>جبر</td><td>فسحة</td><td>دراسات اجتماعية</td><td>English</td><td>حاسب آلي</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الثلاثاء</td><td>علوم</td><td>علوم</td><td>هندسة</td><td>فسحة</td><td>لغة عربية</td><td>دراسات اجتماعية</td><td>تربية فنية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الأربعاء</td><td>English</td><td>English</td><td>لغة عربية</td><td>فسحة</td><td>جبر</td><td>علوم</td><td>تربية دينية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الخميس</td><td>دراسات اجتماعية</td><td>دراسات اجتماعية</td><td>هندسة</td><td>فسحة</td><td>لغة عربية</td><td>English</td><td>نشاط</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
+                <!-- PREP 2 -->
+                <div id="table-prep-2-1" class="schedule-table-view hidden">
+                    <table class="w-full text-right border-collapse min-w-[760px]">
+                        <thead><tr class="bg-slate-100 text-xs sm:text-sm font-extrabold"><th class="p-4 sticky-col text-center w-28">اليوم</th><th class="p-3 text-center">1</th><th class="p-3 text-center">2</th><th class="p-3 text-center">3</th><th class="p-3 text-center bg-slate-200/60">فسحة</th><th class="p-3 text-center">4</th><th class="p-3 text-center">5</th><th class="p-3 text-center">6</th></tr></thead>
+                        <tbody class="divide-y divide-slate-200/60 bg-white/40 text-xs sm:text-sm">
+                            <tr><td class="p-3 sticky-col text-center font-black">الأحد</td><td>English</td><td>English</td><td>جبر</td><td>فسحة</td><td>لغة عربية</td><td>علوم</td><td>دراسات</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الإثنين</td><td>هندسة</td><td>هندسة</td><td>لغة عربية</td><td>فسحة</td><td>English</td><td>دراسات</td><td>دين</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الثلاثاء</td><td>لغة عربية</td><td>لغة عربية</td><td>علوم</td><td>فسحة</td><td>جبر</td><td>English</td><td>حاسب</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الأربعاء</td><td>دراسات</td><td>علوم</td><td>لغة عربية</td><td>فسحة</td><td>هندسة</td><td>جبر</td><td>فنية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الخميس</td><td>علوم</td><td>دراسات</td><td>English</td><td>فسحة</td><td>لغة عربية</td><td>هندسة</td><td>نشاط</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PREP 3 -->
+                <div id="table-prep-3-1" class="schedule-table-view hidden">
+                    <table class="w-full text-right border-collapse min-w-[760px]">
+                        <thead><tr class="bg-slate-100 text-xs sm:text-sm font-extrabold"><th class="p-4 sticky-col text-center w-28">اليوم</th><th class="p-3 text-center">1</th><th class="p-3 text-center">2</th><th class="p-3 text-center">3</th><th class="p-3 text-center bg-slate-200/60">فسحة</th><th class="p-3 text-center">4</th><th class="p-3 text-center">5</th><th class="p-3 text-center">6</th></tr></thead>
+                        <tbody class="divide-y divide-slate-200/60 bg-white/40 text-xs sm:text-sm">
+                            <tr><td class="p-3 sticky-col text-center font-black">الأحد</td><td>لغة عربية</td><td>جبر</td><td>علوم</td><td>فسحة</td><td>English</td><td>دراسات</td><td>دين</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الإثنين</td><td>English</td><td>English</td><td>هندسة</td><td>فسحة</td><td>لغة عربية</td><td>علوم</td><td>حاسب</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الثلاثاء</td><td>دراسات</td><td>دراسات</td><td>لغة عربية</td><td>فسحة</td><td>جبر</td><td>English</td><td>فنية</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الأربعاء</td><td>علوم</td><td>علوم</td><td>English</td><td>فسحة</td><td>هندسة</td><td>لغة عربية</td><td>دراسات</td></tr>
+                            <tr><td class="p-3 sticky-col text-center font-black">الخميس</td><td>جبر</td><td>هندسة</td><td>لغة عربية</td><td>فسحة</td><td>دراسات</td><td>علوم</td><td>نشاط</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
         </main>
     </div>
 
-    <nav class="menu" id="bottom-menu">
-        <!-- Rendered dynamically via JavaScript depending on selected stage -->
+    <!-- Color Legend Card -->
+    <div class="glass-panel rounded-2xl p-4 mt-5 mb-3">
+        <h3 class="text-xs font-bold text-slate-700 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-palette text-purple-600"></i> دليل ألوان المواد التلقائي:
+        </h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 text-xs">
+            <div class="flex items-center gap-2 p-2 rounded-xl bg-purple-100/90 text-purple-900 border border-purple-300 font-bold">
+                <span class="w-3 h-3 rounded-full bg-purple-600 shadow-xs"></span>
+                <span>إنجليزي (Purple)</span>
+            </div>
+            <div class="flex items-center gap-2 p-2 rounded-xl bg-amber-100/90 text-amber-900 border border-amber-300 font-bold">
+                <span class="w-3 h-3 rounded-full bg-amber-500 shadow-xs"></span>
+                <span>لغة عربية (Gold)</span>
+            </div>
+            <div class="flex items-center gap-2 p-2 rounded-xl bg-rose-100/90 text-rose-900 border border-rose-300 font-bold">
+                <span class="w-3 h-3 rounded-full bg-rose-500 shadow-xs"></span>
+                <span>رياضيات / جبر</span>
+            </div>
+            <div class="flex items-center gap-2 p-2 rounded-xl bg-emerald-100/90 text-emerald-900 border border-emerald-300 font-bold">
+                <span class="w-3 h-3 rounded-full bg-emerald-600 shadow-xs"></span>
+                <span>علوم / Science</span>
+            </div>
+            <div class="flex items-center gap-2 p-2 rounded-xl bg-sky-100/90 text-sky-900 border border-sky-300 font-bold">
+                <span class="w-3 h-3 rounded-full bg-sky-500 shadow-xs"></span>
+                <span>دراسات</span>
+            </div>
+            <div class="flex items-center gap-2 p-2 rounded-xl bg-slate-200/90 text-slate-700 border border-slate-300 font-bold">
+                <span class="w-3 h-3 rounded-full bg-slate-500 shadow-xs"></span>
+                <span>فسحة / استراحة</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Bottom Navigation Bar (Grade Selector) -->
+    <nav class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[94%] max-w-2xl glass-nav rounded-2xl px-3 py-2 flex justify-around items-center z-50">
+        <div id="grade-nav-container" class="flex justify-around items-center w-full gap-1">
+            <!-- Dynamically populated grade buttons (Primary 1..6 or Prep 1..3) -->
+        </div>
     </nav>
 
     <script>
-        let currentStage = 'primary';
-        let currentGrade = 1;
+        // State variables
+        let currentStage = 'primary'; // 'primary' or 'prep'
+        let currentGrade = 1;         // 1..6 for primary, 1..3 for prep
+        let currentClassNum = 1;      // 1..4
 
-        // Auto Color Detection function based on HTML badge text
-        function applySubjectColors() {
-            const badges = document.querySelectorAll('.subject-badge');
+        const stageConfigs = {
+            primary: {
+                title: "المرحلة الابتدائية",
+                maxGrade: 6,
+                gradePrefix: "الصف",
+                gradeSuffix: "الابتدائي"
+            },
+            prep: {
+                title: "المرحلة الإعدادية",
+                maxGrade: 3,
+                gradePrefix: "الصف",
+                gradeSuffix: "الإعدادي"
+            }
+        };
+
+        const gradeNamesArabic = {
+            1: "الأول",
+            2: "الثاني",
+            3: "الثالث",
+            4: "الرابع",
+            5: "الخامس",
+            6: "السادس"
+        };
+
+        // Automatic Subject Color Detection Parser
+        function applyAutomaticSubjectColors() {
+            const cells = document.querySelectorAll('.schedule-table-view td:not(.sticky-col)');
             
-            badges.forEach(el => {
-                const text = el.textContent.trim().toLowerCase();
-                
-                // Clear any pre-existing color classes
-                el.classList.remove('badge-purple', 'badge-amber', 'badge-red', 'badge-emerald', 'badge-blue', 'badge-gray', 'badge-default');
-                
-                if (text.includes('إنجليزي') || text.includes('انجليزي') || text.includes('english')) {
-                    el.classList.add('badge-purple');
-                } else if (text.includes('عربي') || text.includes('لغة عربية')) {
-                    el.classList.add('badge-amber');
-                } else if (text.includes('رياضيات') || text.includes('حساب') || text.includes('math') || text.includes('جبر') || text.includes('هندسة')) {
-                    el.classList.add('badge-red');
-                } else if (text.includes('علوم') || text.includes('ساينس') || text.includes('science')) {
-                    el.classList.add('badge-emerald');
-                } else if (text.includes('دراسات') || text.includes('دراسات اجتماعية') || text.includes('social')) {
-                    el.classList.add('badge-blue');
-                } else if (text.includes('فسحة') || text.includes('راحة') || text.includes('استراحة') || text.includes('break')) {
-                    el.classList.add('badge-gray');
-                } else {
-                    el.classList.add('badge-default');
+            cells.forEach(td => {
+                const text = td.innerText.trim().toLowerCase();
+                if (!text) return;
+
+                // Wrap text in styled span badge
+                let colorClass = "subj-default";
+
+                if (text.includes("إنجليزي") || text.includes("لغة إنجليزية") || text.includes("english")) {
+                    colorClass = "subj-english";
+                } else if (text.includes("عربي") || text.includes("لغة عربية")) {
+                    colorClass = "subj-arabic";
+                } else if (text.includes("رياضيات") || text.includes("حساب") || text.includes("جبر") || text.includes("هندسة") || text.includes("math")) {
+                    colorClass = "subj-math";
+                } else if (text.includes("علوم") || text.includes("ساينس") || text.includes("science")) {
+                    colorClass = "subj-science";
+                } else if (text.includes("دراسات") || text.includes("اجتماعيات")) {
+                    colorClass = "subj-social";
+                } else if (text.includes("فسحة") || text.includes("استراحة")) {
+                    colorClass = "subj-break";
                 }
+
+                td.className = "p-2 text-center";
+                td.innerHTML = `
+                    <div class="px-2.5 py-2 rounded-xl border ${colorClass} text-xs sm:text-sm font-bold flex items-center justify-center text-center min-h-[42px] transition-transform hover:scale-[1.02]">
+                        ${td.innerText}
+                    </div>
+                `;
             });
         }
 
-        // Render Bottom Menu Links depending on Primary (1-6) or Prep (1-3)
-        function renderBottomMenu() {
-            const menu = document.getElementById('bottom-menu');
-            menu.innerHTML = '';
+        // Render Floating Bottom Nav Bar (Grade Switcher)
+        function renderGradeNav() {
+            const container = document.getElementById('grade-nav-container');
+            const config = stageConfigs[currentStage];
+            let html = '';
 
-            const maxGrades = currentStage === 'primary' ? 6 : 3;
-
-            for (let i = 1; i <= maxGrades; i++) {
-                const a = document.createElement('a');
-                if (i === currentGrade) a.classList.add('active');
-                a.onclick = () => switchGrade(i);
-
-                const icon = document.createElement('i');
-                icon.className = currentStage === 'primary' ? 'fa-solid fa-shapes' : 'fa-solid fa-graduation-cap';
-
-                const span = document.createElement('span');
-                span.textContent = `الصف ${getArabicOrdinal(i)}`;
-
-                a.appendChild(icon);
-                a.appendChild(span);
-                menu.appendChild(a);
+            for (let g = 1; g <= config.maxGrade; g++) {
+                const isActive = (g === currentGrade);
+                html += `
+                    <button onclick="selectGrade(${g})" class="grade-nav-btn flex flex-col items-center gap-1 py-1 px-2 text-slate-500 ${isActive ? 'active' : ''}">
+                        <div class="grade-icon w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black bg-slate-100 text-slate-700 transition-all">
+                            ${g}
+                        </div>
+                        <span class="text-[10px] font-bold">${gradeNamesArabic[g]}</span>
+                    </button>
+                `;
             }
+
+            container.innerHTML = html;
         }
 
-        function getArabicOrdinal(num) {
-            const ordinals = ['', 'الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس'];
-            return ordinals[num] || num;
+        // Render Class Switcher Pills (1/1, 1/2, 1/3, 1/4)
+        function renderClassPills() {
+            const container = document.getElementById('class-pills-container');
+            let html = '';
+
+            for (let c = 1; c <= 4; c++) {
+                const isActive = (c === currentClassNum);
+                html += `
+                    <button onclick="selectClassNum(${c})" class="class-pill px-4 py-1.5 rounded-xl text-xs font-bold transition-all border border-transparent ${isActive ? 'active' : 'bg-white/60 text-slate-600 hover:bg-white'}">
+                        ${currentGrade}/${c}
+                    </button>
+                `;
+            }
+
+            container.innerHTML = html;
         }
 
+        // Update Visible Table Card
+        function updateActiveTable() {
+            // Hide all tables
+            const allTables = document.querySelectorAll('.schedule-table-view');
+            allTables.forEach(t => t.classList.add('hidden'));
+
+            // Format target element ID (e.g., table-primary-1-1 or fallback to available table)
+            let targetId = `table-${currentStage}-${currentGrade}-${currentClassNum}`;
+            let targetEl = document.getElementById(targetId);
+
+            // Fallback to class 1 if specific sub-class table is not explicitly defined in markup
+            if (!targetEl) {
+                targetId = `table-${currentStage}-${currentGrade}-1`;
+                targetEl = document.getElementById(targetId);
+            }
+
+            if (targetEl) {
+                targetEl.classList.remove('hidden');
+            }
+
+            // Update Header Badge Text
+            const config = stageConfigs[currentStage];
+            const gradeText = gradeNamesArabic[currentGrade];
+            document.getElementById('current-badge-text').innerText = 
+                `${config.gradePrefix} ${gradeText} ${config.gradeSuffix} - فصل ${currentGrade}/${currentClassNum}`;
+        }
+
+        // Switch Stage (Primary / Prep)
         function switchStage(stage) {
             currentStage = stage;
             currentGrade = 1;
+            currentClassNum = 1;
 
-            document.getElementById('stage-primary-btn').classList.toggle('active', stage === 'primary');
-            document.getElementById('stage-prep-btn').classList.toggle('active', stage === 'prep');
+            document.getElementById('btn-stage-primary').classList.toggle('active', stage === 'primary');
+            document.getElementById('btn-stage-prep').classList.toggle('active', stage === 'prep');
 
-            renderBottomMenu();
-            updateTableVisibility();
+            renderGradeNav();
+            renderClassPills();
+            updateActiveTable();
         }
 
-        function switchGrade(grade) {
+        // Select Grade
+        function selectGrade(grade) {
             currentGrade = grade;
-            renderBottomMenu();
-            updateTableVisibility();
+            currentClassNum = 1;
+            renderGradeNav();
+            renderClassPills();
+            updateActiveTable();
         }
 
-        function updateTableVisibility() {
-            document.querySelectorAll('.table-card').forEach(card => {
-                card.classList.remove('active');
-            });
-
-            const targetId = `table-${currentStage}-${currentGrade}`;
-            const targetCard = document.getElementById(targetId);
-            if (targetCard) {
-                targetCard.classList.add('active');
-            }
+        // Select Class Sub-number (1/1, 1/2...)
+        function selectClassNum(num) {
+            currentClassNum = num;
+            renderClassPills();
+            updateActiveTable();
         }
 
-        // Initialize script on DOM ready
-        document.addEventListener('DOMContentLoaded', () => {
-            applySubjectColors();
-            renderBottomMenu();
-            updateTableVisibility();
+        // Initialize App on DOM Load
+        window.addEventListener('DOMContentLoaded', () => {
+            applyAutomaticSubjectColors();
+            renderGradeNav();
+            renderClassPills();
+            updateActiveTable();
         });
     </script>
 </body>
